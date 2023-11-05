@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 3.23)
 
 include(CheckIncludeFileCXX)
 
@@ -247,13 +247,6 @@ list(REMOVE_ITEM APP_SOURCES
 list(REMOVE_ITEM APP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/CoolPropLib.cpp")
 
 set(APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}")
-list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/externals/Eigen")
-list(APPEND APP_INCLUDE_DIRS
-     "${CMAKE_CURRENT_SOURCE_DIR}/externals/msgpack-c/include")
-list(APPEND APP_INCLUDE_DIRS
-     "${CMAKE_CURRENT_SOURCE_DIR}/externals/fmtlib/include")
-list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/externals/fmtlib"
-)# should be deprecated
 list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include")
 list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
@@ -598,6 +591,10 @@ if(COOLPROP_OBJECT_LIBRARY
   if(NOT COOLPROP_OBJECT_LIBRARY)
     target_link_libraries(${LIB_NAME} ${CMAKE_DL_LIBS})
   endif()
+  message("######### Adding conan deps to ${LIB_NAME}")
+  find_package(eigen3 CONFIG REQUIRED)
+  find_package(fmt CONFIG REQUIRED)
+  target_link_libraries(${LIB_NAME} PRIVATE fmt::fmt Eigen3::Eigen)
 
   # For windows systems, bug workaround for Eigen
   if(MSVC90)
@@ -635,6 +632,7 @@ if(COOLPROP_OBJECT_LIBRARY
   if(CMAKE_VERSION VERSION_GREATER 3.0)
     # Add target include directories for easy linking with other applications
     target_include_directories(${LIB_NAME} PUBLIC ${APP_INCLUDE_DIRS})
+    target_link_libraries(${LIB_NAME} PRIVATE fmt::fmt Eigen3::Eigen)
   endif()
 
   # Set the bitness
