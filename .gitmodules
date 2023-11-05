@@ -14,7 +14,3 @@
 	path = externals/REFPROP-headers
 	url = https://github.com/CoolProp/REFPROP-headers.git
 	branch = master
-[submodule "externals/msgpack-c"]
-	path = externals/msgpack-c
-	url = https://github.com/msgpack/msgpack-c
-	branch = master
