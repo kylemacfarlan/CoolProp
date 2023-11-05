@@ -595,7 +595,8 @@ if(COOLPROP_OBJECT_LIBRARY
   find_package(Eigen3 CONFIG REQUIRED)
   find_package(fmt CONFIG REQUIRED)
   find_package(RapidJSON CONFIG REQUIRED)
-  target_link_libraries(${LIB_NAME} PRIVATE fmt::fmt Eigen3::Eigen rapidjson)
+  find_package(msgpack CONFIG REQUIRED)
+  target_link_libraries(${LIB_NAME} PRIVATE fmt::fmt Eigen3::Eigen rapidjson msgpackc-cxx)
 
   # For windows systems, bug workaround for Eigen
   if(MSVC90)
