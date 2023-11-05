@@ -8,7 +8,7 @@
 #if defined(_MSC_VER) && ( defined(_M_ARM) || defined(_M_ARM64) )
 #    define MSGPACK_ENDIAN_LITTLE_BYTE
 #endif
-
+#define MSGPACK_NO_BOOST
 #include "msgpack.hpp"
 
 #if defined(MSGPACK_ENDIAN_LITTLE_BYTE)

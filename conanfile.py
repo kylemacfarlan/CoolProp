@@ -29,7 +29,7 @@ class coolpropRecipe(ConanFile):
     def configure(self):
         if self.options.shared:
             self.options.rm_safe("fPIC")
-
+        self.options["msgpack-cxx/*"].use_boost = False
     def layout(self):
         cmake_layout(self)
 

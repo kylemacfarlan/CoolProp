@@ -3,6 +3,7 @@
 
 #include "AbstractState.h"
 #include "CPmsgpack.h"
+#define MSGPACK_NO_BOOST
 #include <msgpack/fbuffer.hpp>
 #include "crossplatform_shared_ptr.h"
 #include "Exceptions.h"
