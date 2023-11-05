@@ -54,6 +54,8 @@ class coolpropRecipe(ConanFile):
     def requirements(self):
         self.requires("eigen/3.4.0")
         self.requires("fmt/10.1.1")
+        self.requires("rapidjson/cci.20220822")
+        self.requires("catch2/3.4.0")
         
 
     

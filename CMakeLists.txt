@@ -592,9 +592,10 @@ if(COOLPROP_OBJECT_LIBRARY
     target_link_libraries(${LIB_NAME} ${CMAKE_DL_LIBS})
   endif()
   message("######### Adding conan deps to ${LIB_NAME}")
-  find_package(eigen3 CONFIG REQUIRED)
+  find_package(Eigen3 CONFIG REQUIRED)
   find_package(fmt CONFIG REQUIRED)
-  target_link_libraries(${LIB_NAME} PRIVATE fmt::fmt Eigen3::Eigen)
+  find_package(RapidJSON CONFIG REQUIRED)
+  target_link_libraries(${LIB_NAME} PRIVATE fmt::fmt Eigen3::Eigen rapidjson)
 
   # For windows systems, bug workaround for Eigen
   if(MSVC90)
@@ -1971,7 +1972,7 @@ endif()
 ###      COOLPROP TESTING APP       ###
 if(COOLPROP_CATCH_MODULE)
 
-  add_subdirectory("externals/Catch2")
+  find_package(catch3)
   enable_testing()
 
   list(APPEND APP_SOURCES
