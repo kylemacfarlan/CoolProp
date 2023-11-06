@@ -1,6 +1,7 @@
 from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout, CMakeDeps
-
+from conan.tools.files import copy
+import os
 
 class coolpropRecipe(ConanFile):
     name = "coolprop"
@@ -20,7 +21,7 @@ class coolpropRecipe(ConanFile):
     default_options = {"shared": False, "fPIC": True}
 
     # Sources are located in the same place as this recipe, copy them to the recipe
-    exports_sources = "CMakeLists.txt", "src/*", "include/*"
+    exports_sources = "CMakeLists.txt", "src/*", "include/*", "dev/*", "externals/*"
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -37,6 +38,10 @@ class coolpropRecipe(ConanFile):
         deps = CMakeDeps(self)
         deps.generate()
         tc = CMakeToolchain(self)
+        if self.options.shared:
+            tc.cache_variables["COOLPROP_SHARED_LIBRARY"]=True
+        else:
+            tc.cache_variables["COOLPROP_STATIC_LIBRARY"]=True
         tc.generate()
 
     def build(self):
@@ -45,18 +50,22 @@ class coolpropRecipe(ConanFile):
         cmake.build()
 
     def package(self):
-        cmake = CMake(self)
-        cmake.install()
+        copy(self, pattern="*.h", src=os.path.join(self.source_folder, "include"), dst=os.path.join(self.package_folder, "include"))
+        copy(self, pattern="*.a", src=self.build_folder, dst=os.path.join(self.package_folder, "lib"), keep_path=False)
+        copy(self, pattern="*.so", src=self.build_folder, dst=os.path.join(self.package_folder, "lib"), keep_path=False)
+        copy(self, pattern="*.lib", src=self.build_folder, dst=os.path.join(self.package_folder, "lib"), keep_path=False)
+        copy(self, pattern="*.dll", src=self.build_folder, dst=os.path.join(self.package_folder, "bin"), keep_path=False)
+        copy(self, pattern="*.dylib", src=self.build_folder, dst=os.path.join(self.package_folder, "lib"), keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = ["coolprop"]
 
     def requirements(self):
         self.requires("eigen/3.4.0")
-        self.requires("fmt/10.1.1")
+        self.requires("fmt/10.1.1", transitive_headers=True)
         self.requires("rapidjson/cci.20220822")
-        self.requires("catch2/3.4.0")
         self.requires("msgpack-cxx/6.1.0")
+        self.test_requires("catch2/3.4.0")
         
 
     
